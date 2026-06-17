@@ -1,0 +1,28 @@
+# Command Error Messages
+commands.completion.error.parse.missing.args=Missing arguments
+commands.completion.error.parse.int=Invalid integer: %s
+commands.completion.error.parse.long=Invalid long: %s
+commands.completion.error.parse.double=Invalid double: %s
+commands.completion.error.parse.boolean=Invalid boolean: %s
+commands.completion.error.parse.to_small=Value %s is too small. Minimum is %s
+commands.completion.error.parse.to_big=Value %s is too big. Maximum is %s
+commands.completion.error.parse.dimension_missing=Dimension %s is not registered
+commands.completion.error.command.notfound=Unknown command: /%s
+commands.completion.error.command.missingargs=Missing arguments for this command
+commands.completion.error.command.argument_failed=Argument %s failed: %s
+
+# Demo Command
+commands.completion.demo.echo=Echo: %s
+commands.completion.demo.add_result=%d + %d = %d
+commands.completion.demo.greet_hello=Hello, %s
+commands.completion.demo.greet_formal=Hello, %s. How do you do?
+commands.completion.demo.config_set=Config %s set to %s
+commands.completion.demo.help.header=--- Command Completion Demo ---
+commands.completion.demo.help.entry=/%s - %s
+commands.completion.demo.help.echo=Echoes back a message
+commands.completion.demo.help.add=Adds two numbers
+commands.completion.demo.help.greet=Greets a person
+commands.completion.demo.help.config=Sets a config option
+
+# Chat GUI
+gui.completion.chat.no_completions=No completions
