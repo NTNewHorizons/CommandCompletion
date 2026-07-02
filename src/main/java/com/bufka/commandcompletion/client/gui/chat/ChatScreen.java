@@ -29,6 +29,9 @@ public class ChatScreen extends GuiChat implements IModChat {
     public void initGui() {
         super.initGui();
         this.completer = new Completor(this.inputField);
+        if (!this.inputField.getText().isEmpty()) {
+            this.completer.requestUpdate();
+        }
     }
 
     @Override
