@@ -4,6 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
 
+import java.util.List;
+
 import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -11,6 +13,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 public class ChatScreen extends GuiChat implements IModChat {
 
     Completor completer;
+    private int sentHistoryCursor = -1;
+    private String savedText = "";
 
     public ChatScreen(GuiChat chat) {
         super(getInitialText(chat));
@@ -74,9 +78,9 @@ public class ChatScreen extends GuiChat implements IModChat {
             this.mc.displayGuiScreen(null);
         } else if (keyCode != 28 && keyCode != 156) {
             if (keyCode == 200) {
-                this.inputField.moveCursorBy(-1);
+                navigateSentHistory(-1);
             } else if (keyCode == 208) {
-                this.inputField.moveCursorBy(1);
+                navigateSentHistory(1);
             } else if (keyCode == 201) {
                 this.mc.ingameGUI.getChatGUI()
                     .scroll(
@@ -96,6 +100,29 @@ public class ChatScreen extends GuiChat implements IModChat {
                 .trim();
             if (!s.isEmpty()) func_146403_a(s);
             this.mc.displayGuiScreen(null);
+        }
+    }
+
+    private void navigateSentHistory(int direction) {
+        List<String> sentMessages = this.mc.ingameGUI.getChatGUI().getSentMessages();
+        int len = sentMessages.size();
+        if (len == 0) return;
+
+        if (sentHistoryCursor == -1) {
+            savedText = this.inputField.getText();
+            sentHistoryCursor = direction < 0 ? len - 1 : -1;
+        } else {
+            int newCursor = sentHistoryCursor + direction;
+            if (newCursor < 0 || newCursor >= len) {
+                sentHistoryCursor = -1;
+                this.inputField.setText(savedText);
+                return;
+            }
+            sentHistoryCursor = newCursor;
+        }
+
+        if (sentHistoryCursor >= 0) {
+            this.inputField.setText(sentMessages.get(sentHistoryCursor));
         }
     }
 

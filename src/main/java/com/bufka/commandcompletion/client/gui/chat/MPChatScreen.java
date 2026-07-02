@@ -1,5 +1,7 @@
 package com.bufka.commandcompletion.client.gui.chat;
 
+import java.util.List;
+
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.network.NetHandlerPlayClient;
@@ -10,6 +12,8 @@ import org.lwjgl.input.Mouse;
 public class MPChatScreen extends GuiSleepMP implements IModChat {
 
     Completor completer;
+    private int sentHistoryCursor = -1;
+    private String savedText = "";
 
     @Override
     public void initGui() {
@@ -57,9 +61,9 @@ public class MPChatScreen extends GuiSleepMP implements IModChat {
             wakeFromSleep();
         } else if (keyCode != 28 && keyCode != 156) {
             if (keyCode == 200) {
-                this.inputField.moveCursorBy(-1);
+                navigateSentHistory(-1);
             } else if (keyCode == 208) {
-                this.inputField.moveCursorBy(1);
+                navigateSentHistory(1);
             } else if (keyCode == 201) {
                 this.mc.ingameGUI.getChatGUI()
                     .scroll(
@@ -79,6 +83,29 @@ public class MPChatScreen extends GuiSleepMP implements IModChat {
                 .trim();
             if (!s.isEmpty()) func_146403_a(s);
             this.mc.displayGuiScreen(null);
+        }
+    }
+
+    private void navigateSentHistory(int direction) {
+        List<String> sentMessages = this.mc.ingameGUI.getChatGUI().getSentMessages();
+        int len = sentMessages.size();
+        if (len == 0) return;
+
+        if (sentHistoryCursor == -1) {
+            savedText = this.inputField.getText();
+            sentHistoryCursor = direction < 0 ? len - 1 : -1;
+        } else {
+            int newCursor = sentHistoryCursor + direction;
+            if (newCursor < 0 || newCursor >= len) {
+                sentHistoryCursor = -1;
+                this.inputField.setText(savedText);
+                return;
+            }
+            sentHistoryCursor = newCursor;
+        }
+
+        if (sentHistoryCursor >= 0) {
+            this.inputField.setText(sentMessages.get(sentHistoryCursor));
         }
     }
 
