@@ -18,7 +18,7 @@ public class ChatScreen extends GuiChat implements IModChat {
 
     private static String getInitialText(GuiChat chat) {
         Minecraft mc = Minecraft.getMinecraft();
-        if (mc.currentScreen == null && mc.gameSettings.keyBindChat.isPressed()) {
+        if (mc.currentScreen == null && mc.gameSettings.keyBindCommand.isPressed()) {
             return "/";
         }
         return ReflectionHelper

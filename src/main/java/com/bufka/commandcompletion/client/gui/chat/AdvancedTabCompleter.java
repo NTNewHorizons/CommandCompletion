@@ -183,8 +183,12 @@ public abstract class AdvancedTabCompleter extends TabCompleter {
         String s = this.textField.getText()
             .substring(i)
             .toLowerCase();
-        ClientCommandHandler.instance.autoComplete(prefix, s);
-        Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(prefix));
+        try {
+            ClientCommandHandler.instance.autoComplete(prefix, s);
+            Minecraft.getMinecraft().thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(prefix));
+        } catch (Exception e) {
+            // keep existing suggestions on error
+        }
         this.cycle = false;
     }
 
