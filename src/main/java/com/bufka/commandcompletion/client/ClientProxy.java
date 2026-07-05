@@ -14,7 +14,6 @@ import com.bufka.commandcompletion.client.gui.chat.MPChatScreen;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class ClientProxy extends CommonProxy {
 
@@ -26,18 +25,14 @@ public class ClientProxy extends CommonProxy {
     @SubscribeEvent
     public void onGuiOpen(GuiOpenEvent event) {
         GuiScreen screen = event.gui;
+        Minecraft mc = Minecraft.getMinecraft();
 
         if (screen instanceof GuiSleepMP && !(screen instanceof IModChat)) {
-            event.gui = new MPChatScreen();
+            event.setCanceled(true);
+            mc.displayGuiScreen(new MPChatScreen());
         } else if (screen instanceof GuiChat && !(screen instanceof IModChat)) {
-            GuiChat chat = (GuiChat) screen;
-            String initialText = "";
-            try {
-                initialText = ReflectionHelper.getPrivateValue(GuiChat.class, chat, new String[] { "defaultInputFieldText", "field_146410_g" });
-            } catch (Exception e) {
-                // ignore, fall back to empty
-            }
-            event.gui = new ChatScreen(initialText);
+            event.setCanceled(true);
+            mc.displayGuiScreen(new ChatScreen((GuiChat) screen));
         }
     }
 }

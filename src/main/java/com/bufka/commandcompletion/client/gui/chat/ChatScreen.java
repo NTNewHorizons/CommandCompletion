@@ -1,11 +1,14 @@
 package com.bufka.commandcompletion.client.gui.chat;
 
+import java.util.List;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiTextField;
 
-import java.util.List;
-
 import org.lwjgl.input.Mouse;
+
+import cpw.mods.fml.relauncher.ReflectionHelper;
 
 public class ChatScreen extends GuiChat implements IModChat {
 
@@ -13,8 +16,26 @@ public class ChatScreen extends GuiChat implements IModChat {
     private int sentHistoryCursor = -1;
     private String savedText = "";
 
-    public ChatScreen(String initialText) {
-        super(initialText);
+    public ChatScreen(GuiChat chat) {
+        super(getInitialText(chat));
+    }
+
+    private static String getInitialText(GuiChat chat) {
+        Minecraft mc = Minecraft.getMinecraft();
+        if (mc.currentScreen == null) {
+            if (mc.gameSettings.keyBindCommand.isPressed()) {
+                return "/";
+            }
+            if (mc.gameSettings.keyBindChat.isPressed()) {
+                return "";
+            }
+        }
+        try {
+            return ReflectionHelper.getPrivateValue(GuiChat.class, chat,
+                new String[] { "defaultInputFieldText", "field_146410_g" });
+        } catch (Exception e) {
+            return "";
+        }
     }
 
     @Override
