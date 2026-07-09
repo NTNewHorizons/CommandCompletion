@@ -22,7 +22,7 @@ public class ChatScreen extends GuiChat implements IModChat {
     private static String getInitialText(GuiChat chat) {
         try {
             return ReflectionHelper.getPrivateValue(GuiChat.class, chat,
-                new String[] { "defaultInputFieldText", "field_146410_g" });
+                new String[] { "defaultInputFieldText", "field_146409_v", "field_146410_g" });
         } catch (Exception e) {
             return "";
         }
