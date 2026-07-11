@@ -1,6 +1,5 @@
 package com.bufka.commandcompletion.client;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -13,6 +12,7 @@ import com.bufka.commandcompletion.client.gui.chat.IModChat;
 import com.bufka.commandcompletion.client.gui.chat.MPChatScreen;
 
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class ClientProxy extends CommonProxy {
@@ -22,17 +22,14 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onGuiOpen(GuiOpenEvent event) {
         GuiScreen screen = event.gui;
-        Minecraft mc = Minecraft.getMinecraft();
 
         if (screen instanceof GuiSleepMP && !(screen instanceof IModChat)) {
-            event.setCanceled(true);
-            mc.displayGuiScreen(new MPChatScreen());
+            event.gui = new MPChatScreen();
         } else if (screen instanceof GuiChat && !(screen instanceof IModChat)) {
-            event.setCanceled(true);
-            mc.displayGuiScreen(new ChatScreen((GuiChat) screen));
+            event.gui = new ChatScreen((GuiChat) screen);
         }
     }
 }
